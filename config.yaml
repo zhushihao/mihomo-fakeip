@@ -300,6 +300,9 @@ rule-providers:
   ad_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs', path: ./yaml_bak/Fakeip/bdd9ae28f3e26e84df93b9aa79f2b6d5}
   # =============================== -  匹配逻辑  - ================================
 rules:
+  # 0. 公司内网域名: 必须直连 + 内网 DNS 解析, 优先级高于广告拦截与 geosite 分流
+  - DOMAIN-SUFFIX,bilibili.co,DIRECT
+  - DOMAIN-SUFFIX,bilibili.local,DIRECT
   - DOMAIN-SUFFIX,slee.pt,默认代理
   # 1. 内网与私有网络 (直连)
   - RULE-SET,private_ip,DIRECT,no-resolve
@@ -454,9 +457,24 @@ dns:
     - RULE-SET,cn,real-ip
     - RULE-SET,cloudflare@cn,real-ip
     - RULE-SET,microsoft@cn,real-ip
+    # 公司内网域名: 返回真实 IP, 否则 fake-ip 段地址在内网不可路由
+    - '+.bilibili.co'
+    - '+.bilibili.local'
+  # 公司内网 DNS (办公网 DHCP 下发, 域 bilibili.local)
+  # 优先级高于 direct-nameserver; 非办公网时超时后回落到下面的公共 DNS
+  nameserver-policy:
+    '+.bilibili.co':
+      - 10.19.193.249
+      - 10.19.193.250
+    '+.bilibili.local':
+      - 10.19.193.249
+      - 10.19.193.250
   direct-nameserver:
+    - 10.19.193.249
+    - 10.19.193.250
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
+  direct-nameserver-follow-policy: true
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
