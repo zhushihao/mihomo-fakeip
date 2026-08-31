@@ -458,8 +458,9 @@ dns:
     - RULE-SET,cloudflare@cn,real-ip
     - RULE-SET,microsoft@cn,real-ip
     # 公司内网域名: 返回真实 IP, 否则 fake-ip 段地址在内网不可路由
-    - '+.bilibili.co'
-    - '+.bilibili.local'
+    # 注意: fake-ip-filter-mode 为 rule 时, 每条必须显式带 real-ip / fake-ip
+    - DOMAIN-SUFFIX,bilibili.co,real-ip
+    - DOMAIN-SUFFIX,bilibili.local,real-ip
   # 公司内网 DNS (办公网 DHCP 下发, 域 bilibili.local)
   # 优先级高于 direct-nameserver; 非办公网时超时后回落到下面的公共 DNS
   nameserver-policy:
