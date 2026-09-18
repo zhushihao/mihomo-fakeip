@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V4.0（2026-09-19）===                                #
+#  === 当前版本：V4.1（2026-09-19）===                                #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -58,6 +58,12 @@
 #                  Google）；美国提到首位（默认回落不再是中国香港）         #
 #                ※ store-selected 会记住旧值，改完须在面板把 4 个 AI 组     #
 #                  重选一次，否则仍是「默认代理」                          #
+#   V4.1 (9-19)  ① VIP2-美国AI 过滤加排「3倍扣量」：兜底时不再吃 3 倍流量 #
+#                ② Cloudflare / Microsoft / Apple 首项 → 美国AI           #
+#                  此前三组走 默认代理→主用线路→美国→VIP1-美国，          #
+#                  会被 url-test 选中「流媒体」类共享节点（IP 脏、被风控） #
+#                ※ 同 V4.0：store-selected 会记住旧值，改完须在面板把这个 #
+#                  3 组各重选一次才生效                                   #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -132,13 +138,13 @@ proxy-groups:
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
-  - {name: Apple, "type": "select", "proxies": [默认代理, DIRECT, 自动选择, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
+  - {name: Apple, "type": "select", "proxies": [美国AI, 默认代理, DIRECT, 自动选择, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
   - {name: Bilibili, "type": "select", "proxies": [DIRECT, 默认代理, 自动选择, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png'}
-  - {name: Microsoft, "type": "select", "proxies": [默认代理, DIRECT, 自动选择, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png',}
+  - {name: Microsoft, "type": "select", "proxies": [美国AI, 默认代理, DIRECT, 自动选择, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png',}
   # 国外
 
   - {name: GitHub, "type": "select", "proxies": [默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png'}
-  - {name: Cloudflare, "type": "select", "proxies": [默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
+  - {name: Cloudflare, "type": "select", "proxies": [美国AI, 默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
   - {name: Google, "type": "select", "proxies": [美国AI, 默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: YouTube, "type": "select", "proxies": [默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png'}
   - {name: 国外媒体集合, "type": "select", "proxies": [默认代理, 智能故转, 故障转移, 负载均衡, 自动选择, 香港, 美国, 日本, 台湾, 新加坡, 韩国, 荒郊地区, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png'}
@@ -190,7 +196,7 @@ proxy-groups:
   - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
   - {name: VIP1-美国AI, type: url-test, interval: 30, lazy: true, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(高速|CTCU|IEPL|IPLC|CN2))((?!.*(排除1|排除2|5x|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: VIP2-美国AI, type: url-test, interval: 30, lazy: true, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连))((?!.*(排除1|排除2|5x|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP2-美国AI, type: url-test, interval: 30, lazy: true, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连))((?!.*(排除1|排除2|5x|3倍扣量|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: 美国AI, type: fallback, interval: 30, lazy: true, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国AI, VIP2-美国AI, 美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: 荒郊地区, type: select, include-all: true, filter: "^(?!.*(DIRECT|\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|\U0001F1ED\U0001F1F0|香港|HK|Hong|\U0001F1EF\U0001F1F5|日本|川日|东京|大阪|泉日|埼玉|JP|Japan|\U0001F1E8\U0001F1F3|台湾|\U0001F1F9\U0001F1FC|TW|\U0001F1F8\U0001F1EC|新加坡|狮|SG|Singapore|\U0001F1F0\U0001F1F7|韩国|首尔|KR|Korea|流量|剩余|到期|官网|客服|套餐|邮箱|版本)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
   - {name: 全球手动, type: select, include-all: true, filter: '^(?!.*(DIRECT|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))', icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/America_Map.png',}
