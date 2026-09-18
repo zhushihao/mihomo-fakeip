@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.1（2026-09-19）===                                #
+#  === 当前版本：V5.2（2026-09-19）===                                #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -86,6 +86,16 @@
 #                   download.xbox.com（下载走国内 Akamai，联机仍走 Xbox 组） #
 #                ⑤ 例外组（DIRECT 必须首位，不套用①）：                   #
 #                   国内网站 / Bilibili / PT和BT下载 / Speedtest / PlayStation #
+#  V5.2 (9-19)  AI 与默认链路彻底分离：AI→蓝胖云 / 其余→良心云            #
+#               ① 美国AI 成员对调：蓝胖云优先、良心云作兜底               #
+#               ② Gemini / ChatGPT / AI集合 / Google 首项 = 美国AI        #
+#               ③ 默认代理 首项 美国AI → 美国（AI 已独立，总闸让位）      #
+#               ④ VIP1-美国 放开「洛杉矶 0.01x」2 节点：                  #
+#                  正向加 (高速|CTCU|洛杉矶)、负向去「流媒体」→ 5→7 节点  #
+#                  ※ 5 个 0.1x 流媒体节点(gemini=429)不含上述词，仍被挡住 #
+#               ⑤ 效果：AI 走蓝胖云 9 节点(0.4~0.9s、单机场不漂)；        #
+#                  其余走 美国 → VIP1-美国 7 节点(含洛杉矶快线 2.1s)      #
+#               ※ store-selected:true，改完须 PUT 清各受影响组的旧选择值  #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -135,7 +145,7 @@ proxy-providers:
 # ============  -  域名策略组  - ================
 proxy-groups:
   # 总模式：
-  - {name: 默认代理, "type": "select", "proxies": [美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png',}
+  - {name: 默认代理, "type": "select", "proxies": [美国, 美国AI, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png',}
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
   - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Info.png'}   # 良心云
   - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Info.png'}   # 蓝胖云
@@ -150,9 +160,9 @@ proxy-groups:
   # 漏网之鱼策略  
   - {name: 漏网之鱼, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png'}
   # AI 相关服务
-  - {name: AI集合, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
-  - {name: Gemini, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
-  - {name: ChatGPT, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
+  - {name: AI集合, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
+  - {name: Gemini, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
+  - {name: ChatGPT, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
@@ -163,7 +173,7 @@ proxy-groups:
 
   - {name: GitHub, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png'}
   - {name: Cloudflare, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
-  - {name: Google, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
+  - {name: Google, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: YouTube, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png'}
   - {name: 国外媒体集合, "type": "select", "proxies": [默认代理, 美国AI, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png'}
   # 社交平台策略
@@ -209,13 +219,13 @@ proxy-groups:
   - {name: VIP1-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
   - {name: VIP2-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
   - {name: 韩国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-韩国, VIP2-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
-  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?=.*(高速|CTCU|洛杉矶))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP2-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
   - {name: VIP1-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(高速|CTCU|IEPL|IPLC|CN2))((?!.*(排除1|排除2|5x|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连))((?!.*(排除1|排除2|5x|3倍扣量|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: 美国AI, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国AI, VIP2-美国AI], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: 美国AI, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP2-美国AI, VIP1-美国AI], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
   - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP1-日本流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(日本))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
