@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.3（2026-09-20）===                                #
+#  === 当前版本：V5.4（2026-09-20）===                                #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -106,6 +106,14 @@
 #                  + NETWORK,udp）：SRC-PORT,41641 / DST-PORT,3478 / DST-PORT,41641 #
 #               ③ 仅影响来财单机 Tailscale UDP；TCP/QUIC/其他设备均不变   #
 #               ※ Tailscale 若改用非 41641 端口，需同步更新上述规则       #
+#  V5.4 (9-20)  新增 Tailscale 进程直连（供 Clash Verge 等 PC 端使用）    #
+#               ① 3 条 PROCESS-NAME → DIRECT：tailscaled.exe /            #
+#                  tailscale-ipn.exe / tailscale.exe                      #
+#               ② 用途：PC 端若只靠域名/IP 规则，Tailscale 流量会被       #
+#                  Clash 的 Meta TUN 接管 → P2P 打洞失败（本次已实测）    #
+#               ③ 路由器端拿不到进程名（TPROXY 无进程上下文）→ 不匹配，   #
+#                  由上方 SRC-IP-CIDR + NETWORK,udp 那 3 条接管           #
+#               ※ 对路由器属「死规则」，仅多一次匹配尝试，无副作用        #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -331,9 +339,14 @@ rule-providers:
   ad_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs', path: ./yaml_bak/Fakeip/bdd9ae28f3e26e84df93b9aa79f2b6d5}
   # =============================== -  匹配逻辑  - ================================
 rules:
-  # === Tailscale 直连（V5.3）：不修则 UDP 被 TPROXY 抓走 → 走美国节点 → P2P 打洞失败 ===
+  # === Tailscale 直连（V5.3/V5.4）：不修则 UDP 被 TPROXY 抓走 → 走美国节点 → P2P 打洞失败 ===
   # 100.64.0.0/10 = RFC 6598 保留段，Tailscale 虚拟网段 → 必须直连
   - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  # Tailscale 进程直连（V5.4）—— Clash Verge / PC 端按进程名匹配
+  # 注：路由器端拿不到进程名（TPROXY 无进程上下文）→ 不匹配，由下方 SRC-IP-CIDR 规则接管
+  - PROCESS-NAME,tailscaled.exe,DIRECT
+  - PROCESS-NAME,tailscale-ipn.exe,DIRECT
+  - PROCESS-NAME,tailscale.exe,DIRECT
   # 来财(192.168.50.254) 的 Tailscale UDP：41641=WireGuard 数据面源端口 / 3478=STUN 探测端口
   - AND,((SRC-IP-CIDR,192.168.50.254/32),(NETWORK,udp),(SRC-PORT,41641)),DIRECT
   - AND,((SRC-IP-CIDR,192.168.50.254/32),(NETWORK,udp),(DST-PORT,3478)),DIRECT
