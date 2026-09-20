@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.2（2026-09-19）===                                #
+#  === 当前版本：V5.3（2026-09-20）===                                #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -96,6 +96,16 @@
 #               ⑤ 效果：AI 走蓝胖云 9 节点(0.4~0.9s、单机场不漂)；        #
 #                  其余走 美国 → VIP1-美国 7 节点(含洛杉矶快线 2.1s)      #
 #               ※ store-selected:true，改完须 PUT 清各受影响组的旧选择值  #
+#  V5.3 (9-20)  Tailscale P2P 直连修复：来财的 UDP 不再被 TPROXY 抓走     #
+#               ① 根因：TPROXY(23458) 同时接管 TCP+UDP，且分流按目标 IP(ipset) #
+#                  判定 → Tailscale peer 是任意公网 IP → 恒落「兜底走代理」 #
+#                  → STUN 自报 23.237.50.x(美国节点) → 打洞失败 → via DERP(lax) #
+#               ② 新增 4 条 rules（置 rules 段最前）：                    #
+#                  IP-CIDR,100.64.0.0/10,DIRECT（Tailscale 虚拟网段）     #
+#                  来财(192.168.50.254) 的 UDP 直连 ×3（AND 组合 SRC-IP-CIDR #
+#                  + NETWORK,udp）：SRC-PORT,41641 / DST-PORT,3478 / DST-PORT,41641 #
+#               ③ 仅影响来财单机 Tailscale UDP；TCP/QUIC/其他设备均不变   #
+#               ※ Tailscale 若改用非 41641 端口，需同步更新上述规则       #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -321,6 +331,13 @@ rule-providers:
   ad_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs', path: ./yaml_bak/Fakeip/bdd9ae28f3e26e84df93b9aa79f2b6d5}
   # =============================== -  匹配逻辑  - ================================
 rules:
+  # === Tailscale 直连（V5.3）：不修则 UDP 被 TPROXY 抓走 → 走美国节点 → P2P 打洞失败 ===
+  # 100.64.0.0/10 = RFC 6598 保留段，Tailscale 虚拟网段 → 必须直连
+  - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  # 来财(192.168.50.254) 的 Tailscale UDP：41641=WireGuard 数据面源端口 / 3478=STUN 探测端口
+  - AND,((SRC-IP-CIDR,192.168.50.254/32),(NETWORK,udp),(SRC-PORT,41641)),DIRECT
+  - AND,((SRC-IP-CIDR,192.168.50.254/32),(NETWORK,udp),(DST-PORT,3478)),DIRECT
+  - AND,((SRC-IP-CIDR,192.168.50.254/32),(NETWORK,udp),(DST-PORT,41641)),DIRECT
   # 0. 公司内网域名: 必须直连 + 内网 DNS 解析, 优先级高于广告拦截与 geosite 分流
   - DOMAIN-SUFFIX,bilibili.co,DIRECT
   - DOMAIN-SUFFIX,bilibili.local,DIRECT
