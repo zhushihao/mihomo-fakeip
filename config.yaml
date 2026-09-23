@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.4（2026-09-20）===                                #
+#  === 当前版本：V5.5（2026-09-23）===                                #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -114,6 +114,21 @@
 #               ③ 路由器端拿不到进程名（TPROXY 无进程上下文）→ 不匹配，   #
 #                  由上方 SRC-IP-CIDR + NETWORK,udp 那 3 条接管           #
 #               ※ 对路由器属「死规则」，仅多一次匹配尝试，无副作用        #
+#  V5.5 (9-23)  AI 出口只走「Google 认可的美区节点」：                    #
+#               ① 根因：Google 的 GeoIP 与商业 IP 库相反 —— vip2 的       #
+#                  「美国直连Pro / Pro 2」被 Google 判 China（商业库      #
+#                  全判美国 DMIT），Antigravity/Gemini API 直接回         #
+#                  FAILED_PRECONDITION·User location is not supported     #
+#               ② VIP2-美国AI filter 收紧为白名单：只留 直连1~5 + Pro 3   #
+#                  （实测 23 个美区节点得出；排除 Pro Max / 3倍扣量 /     #
+#                   x0.2 / Pro / Pro 2）                                  #
+#               ③ 美国AI 去掉 VIP1-美国AI（良心云 12 个美区节点实测       #
+#                  全判 China，留着只会在 fallback 时再报错）             #
+#                  → 美国AI = fallback[VIP2-美国AI]                       #
+#               ④ 判据：policies.google.com 的 Country version +          #
+#                  play.google.com 页脚地区，两者一致才采信               #
+#                  （YouTube 的 GL 不可用：同节点报 US 属假阳性）         #
+#               ※ 该判定随 Google 更新 IP 库变化，非永久保证              #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -242,8 +257,8 @@ proxy-groups:
   - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
   - {name: VIP1-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(高速|CTCU|IEPL|IPLC|CN2))((?!.*(排除1|排除2|5x|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连))((?!.*(排除1|排除2|5x|3倍扣量|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: 美国AI, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP2-美国AI, VIP1-美国AI], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连1|直连2|直连3|直连4|直连5|Pro 3))((?!.*(排除1|排除2|5x|3倍扣量|Pro Max|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: 美国AI, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP2-美国AI], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
   - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP1-日本流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(日本))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
