@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.6（2026-09-23）===                                #
+#  === 当前版本：V5.7（2026-10-07）===                                   #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -134,6 +134,17 @@
 #                  已无人引用，保留无意义                                 #
 #               ② 同时省掉它每 5 秒一轮的无效健康检查（Tier-1）           #
 #               ※ 组数 67 → 66；如日后良心云 IP 转干净，需重建该组        #
+#  V5.7 (10-07) fake-ip-filter 加 Collector 精确域名例外：               #
+#  ① 追加 1 条 DOMAIN,cn-hk-quotes-mcp.zhushihao710.workers.dev,real-ip  #
+#  ② 只此一条，不加 workers.dev 后缀、不加任何通配                       #
+#  ③ 起因：本地发送程序拒绝 198.18.x（fake-ip 非公网地址）               #
+#  ④ 同一例外已写入路由器模板 yaml_dns/fakeip.yaml                       #
+#  ※ 规则条数不变；见下方「dns 段不生效」告警                            #
+#  === ⚠ dns 段不生效（改 dns 前必读）===                                #
+#  koolshare merlinclash 的 check_dnsplan() 直接 cat 模板                #
+#  /koolshare/merlinclash/yaml_dns/fakeip.yaml 覆盖整个 dns: 段，        #
+#  故本文件的 fake-ip-filter / nameserver-policy / ipv6 均不生效。       #
+#  → 改 dns 必须改路由器上的 yaml_dns/fakeip.yaml（V5.7 已同步）         #
 #  === 核心设计 ===                                                        #
 #   1. 地区组自动测速：香港/台湾/新加坡/日本/韩国/美国 = url-test 选最快    #
 #   2. VIP 双组兜底：良心云(vip1)优先，全挂→自动切蓝胖云(vip2)选最快       #
@@ -535,6 +546,7 @@ dns:
     # 注意: fake-ip-filter-mode 为 rule 时, 每条必须显式带 real-ip / fake-ip
     - DOMAIN-SUFFIX,bilibili.co,real-ip
     - DOMAIN-SUFFIX,bilibili.local,real-ip
+    - DOMAIN,cn-hk-quotes-mcp.zhushihao710.workers.dev,real-ip
   # 公司内网 DNS (办公网 DHCP 下发, 域 bilibili.local)
   # 优先级高于 direct-nameserver; 非办公网时超时后回落到下面的公共 DNS
   nameserver-policy:
