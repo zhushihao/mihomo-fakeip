@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.8（2026-10-07）===                                   #
+#  === 当前版本：V5.9（2026-10-14）===                                     #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -146,6 +146,18 @@
 #  ③ 起因：发送程序拒绝 198.18.x（fake-ip 非公网地址），与 V5.7 同因     #
 #  ④ 至此 filter 内共 2 条精确例外，其余 6 条原样未动                    #
 #  ※ 规则条数不变；两条例外须与路由器模板同步，见下方告警                #
+#  V5.9 (10-14) provider 健康检查 lazy 化 + interval 5→60：                #
+#  ① 根因：vip1(51)+vip2(55)=106 节点每 5s 全量探测，provider 级          #
+#    单队列并发仅 10、无 timeout 默认 5000ms → 严重积压 →                  #
+#    alive 状态滞后/假死（2026-10-13 google.com 打不开即此因）             #
+#  ② 两 provider health-check：lazy false→true、interval 5→60             #
+#    lazy=true 仅当组被使用(Touch)且距上次探测超 interval 才测，           #
+#    闲置 provider 零探测；活跃 provider 复测负载降为 1/12                 #
+#  ③ 组级 health-check 参数无效已源码证实：registerHealthCheckTask        #
+#    在组 url 与 provider url 相同时直接 return，V3.7/V3.8 的              #
+#    组级 interval/lazy 改动从未生效，唯一杠杆是 provider 级               #
+#  ※ 探测分级 Tier-1：provider hc 5s → 60s/lazy:true                       #
+#  ※ 组结构/成员/rules 零变化，PUT /configs 热加载即生效                   #
 #  === ⚠ dns 段不生效（改 dns 前必读）===                                #
 #  koolshare merlinclash 的 check_dnsplan() 直接 cat 模板                #
 #  /koolshare/merlinclash/yaml_dns/fakeip.yaml 覆盖整个 dns: 段，        #
@@ -158,7 +170,7 @@
 #   4. VIP1信息/VIP2信息：独立组查看剩余流量/套餐到期（非代理）            #
 #                                                                         #
 #  === 探测分级（V3.8 起，改动前务必看这里）===                           #
-#   Tier-1 全速：provider hc 5s + 20 个链路组 5s / lazy:false             #
+#   Tier-1 全速：provider hc 60s/lazy + 20 个链路组 5s / lazy:false        #
 #                （主用线路 + 6 地区组 + 12 个 VIP1/VIP2-XX + VIP2兜底）   #
 #   Tier-2 休眠：36 个闲置组 30s / lazy:true                              #
 #                （24 个 load-balance 子组 + 12 个均衡/策略父组）          #
@@ -178,7 +190,7 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 5, "lazy": false}
+    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[良心云]"
@@ -190,7 +202,7 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 5, "lazy": false}
+    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[蓝胖云]"
