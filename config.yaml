@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V5.9（2026-10-14）===                                     #
+#  === 当前版本：V6.0（2026-10-16）===                                     #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -158,6 +158,24 @@
 #    组级 interval/lazy 改动从未生效，唯一杠杆是 provider 级               #
 #  ※ 探测分级 Tier-1：provider hc 5s → 60s/lazy:true                       #
 #  ※ 组结构/成员/rules 零变化，PUT /configs 热加载即生效                   #
+#  V6.0 (10-16) 修 DNS 泄露 (ip.net.coffee 检测判「可能泄露」):            #
+#  ① 根因: 路由器 DNS 模板把全部域名(含代理域名)交给阿里/腾讯 DoH,        #
+#     DoH 连接从电信家宽直连出去 -> 工具看到「出口IP国外+解析器在中国」    #
+#     -> 判泄露 (实证: AliDNS 解析探测域名时伴随 180.153.91.53 上海电信)   #
+#  ② 默认 nameserver 改境外 DoH (8.8.8.8/1.1.1.1), respect-rules:true    #
+#     下 DoH 连接按规则路由自动走代理 (8.8.8.8->google_ip->Google组)      #
+#  ③ 新增 nameserver-policy: cn/apple@cn/cloudflare@cn/microsoft@cn/      #
+#     private -> 国内 DoH (国内域名解析不受影响+CDN就近);                 #
+#     bilibili.co/local -> 内网 DNS 优先+公共 DoH 竞速兜底                 #
+#     (在公司走内网, 在家公共 DoH 兜底不失败)                             #
+#  ④ fake-ip-filter 补 bilibili.co/bilibili.local->real-ip (内网域名      #
+#     拿 fake-ip 段地址不可路由; bilibili.local 已由 private 覆盖)         #
+#  ⑤ direct-nameserver / proxy-server-nameserver 保持国内 DoH 不变         #
+#     (后者解析节点自身域名, 必须国内直连防循环)                          #
+#  ※ 生效位置: 路由器 /koolshare/merlinclash/yaml_dns/fakeip.yaml        #
+#    (插件 check_dnsplan 原样追加, 基线里这段只是文档)                    #
+#  ※ 已知分歧: V3.8 的 tracker->real-ip 未进模板 (BT tracker 暂用 fake-ip)#
+#  ※ 分组零变化, PUT /configs 热加载即生效                               #
 #  === ⚠ dns 段不生效（改 dns 前必读）===                                #
 #  koolshare merlinclash 的 check_dnsplan() 直接 cat 模板                #
 #  /koolshare/merlinclash/yaml_dns/fakeip.yaml 覆盖整个 dns: 段，        #
@@ -543,7 +561,7 @@ sniffer:
     - '+.apple.com'
 dns:
   enable: true
-  ipv6: true
+  ipv6: false
   cache-algorithm: arc
   enhanced-mode: fake-ip
   listen: :23453
@@ -561,30 +579,51 @@ dns:
     - RULE-SET,cloudflare@cn,real-ip
     - RULE-SET,microsoft@cn,real-ip
     # 公司内网域名: 返回真实 IP, 否则 fake-ip 段地址在内网不可路由
-    # 注意: fake-ip-filter-mode 为 rule 时, 每条必须显式带 real-ip / fake-ip
     - DOMAIN-SUFFIX,bilibili.co,real-ip
     - DOMAIN-SUFFIX,bilibili.local,real-ip
     - DOMAIN,cn-hk-quotes-mcp.zhushihao710.workers.dev,real-ip
     - DOMAIN,connectors.api.openai.com,real-ip
-  # 公司内网 DNS (办公网 DHCP 下发, 域 bilibili.local)
-  # 优先级高于 direct-nameserver; 非办公网时超时后回落到下面的公共 DNS
+  # V6.0: 公司内网域名 -> 内网 DNS 优先, 与公共 DoH 并发竞速
+  # (在家 10.19.x 不可达时公共 DoH 先返回不失败; 在公司内网 DNS 先返回)
   nameserver-policy:
     '+.bilibili.co':
       - 10.19.193.249
       - 10.19.193.250
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
     '+.bilibili.local':
       - 10.19.193.249
       - 10.19.193.250
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+    # V6.0: 国内/直连域名 -> 国内 DoH (CDN 就近, 不过代理)
+    'rule-set:cn':
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+    'rule-set:apple@cn':
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+    'rule-set:cloudflare@cn':
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+    'rule-set:microsoft@cn':
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+    'rule-set:private':
+      - https://223.5.5.5/dns-query
+      - https://119.29.29.29/dns-query
+  # V6.0: 默认 nameserver 改境外 DoH -- respect-rules:true 下 DoH 连接
+  # 按规则路由 (8.8.8.8->google_ip->Google组->代理; 1.1.1.1->cloudflare_ip
+  # ->Cloudflare组->代理), 代理域名不再经阿里/腾讯 DoH 从家宽直连出去
+  nameserver:
+    - https://8.8.8.8/dns-query
+    - https://1.1.1.1/dns-query
+  # DIRECT 出站解析: 国内 DoH
   direct-nameserver:
-    - 10.19.193.249
-    - 10.19.193.250
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
-  direct-nameserver-follow-policy: true
+  # 代理节点自身域名解析: 必须国内直连, 否则循环
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
-  nameserver:
-    - https://223.5.5.5/dns-query#disable-qtype-65=true
-    - https://119.29.29.29/dns-query#disable-qtype-65=true
 tproxy-port: 23458
