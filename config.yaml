@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V6.1（2026-10-17）===                                     #
+#  === 当前版本：V6.2（2026-10-17）===                                     #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -177,6 +177,7 @@
 #  ※ 已知分歧: V3.8 的 tracker->real-ip 未进模板 (BT tracker 暂用 fake-ip)#
 #  ※ 分组零变化, PUT /configs 热加载即生效                               #
 #  V6.1 (10-17) tracker->real-ip 补进路由器模板 (对齐 V3.8 意图):            #
+#   V6.2 (10-17) 新增 Claude 组（对齐 ChatGPT）+ 3 条 claude/anthropic 规则 #
 #  ① 根因: V3.8 起基线 fake-ip-filter 就含 RULE-SET,tracker,real-ip,        #
 #     但插件只认 yaml_dns/fakeip.yaml 模板, 该条从未进模板 → BT tracker      #
 #     域名一直拿 fake-ip (198.18.x), 部分 BT 客户端连不上 tracker            #
@@ -258,6 +259,7 @@ proxy-groups:
   - {name: AI集合, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
   - {name: Gemini, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
   - {name: ChatGPT, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
+  - {name: Claude, "type": "select", "proxies": [美国AI, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
@@ -472,6 +474,9 @@ rules:
   # 8. AI 相关服务
   - RULE-SET,gemini,Gemini
   - RULE-SET,openai,ChatGPT
+  - DOMAIN-SUFFIX,claude.ai,Claude
+  - DOMAIN-SUFFIX,claude.com,Claude
+  - DOMAIN-SUFFIX,anthropic.com,Claude
   - RULE-SET,category-ai-!cn,AI集合
   # 9. Cloudflare 相关
   - RULE-SET,cloudflare@cn,DIRECT
