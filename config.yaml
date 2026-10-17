@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V6.5（2026-10-17）===                                     #
+#  === 当前版本：V6.6（2026-10-17）===                                     #
 #  版本历史：                                                             #
 #   V1 (8-15)   VIP1 分组 url-test（地区组仅蓝胖云，未上传路由器）          #
 #   V2 (8-16)   fallback 混合池（蓝胖云+良心云混用，无优先级）             #
@@ -181,6 +181,7 @@
 #   V6.3 (10-17) 美国AI→Claude.AI：新加坡专线 fallback，Anthropic 405 探针 #
 #   V6.4 (10-17) Claude.AI 收窄为 新加坡专线0[34]：仅留 Google=SG 且 Anthropic 可用的两条 #
 #   V6.5 (10-17) Claude 规则扩到 12 条（4 源+RDAP）；AI集合 移除 Claude.AI 成员          #
+#   V6.6 (10-17) 补 lanpangyun.org / preply.com -> 国外网站（直连被墙，勿走 DIRECT） #
 #  ① 根因: V3.8 起基线 fake-ip-filter 就含 RULE-SET,tracker,real-ip,        #
 #     但插件只认 yaml_dns/fakeip.yaml 模板, 该条从未进模板 → BT tracker      #
 #     域名一直拿 fake-ip (198.18.x), 部分 BT 客户端连不上 tracker            #
@@ -520,6 +521,8 @@ rules:
   - RULE-SET,nintendo,Nintendo
   - RULE-SET,playstation,PlayStation
   # 13. 国内禁的网站
+  - DOMAIN-SUFFIX,lanpangyun.org,国外网站
+  - DOMAIN-SUFFIX,preply.com,国外网站
   - RULE-SET,gfw,国外网站
   # 14. 国外网站
   - RULE-SET,geolocation-!cn,国外网站
