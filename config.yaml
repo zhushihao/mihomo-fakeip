@@ -228,7 +228,7 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[良心云]"
@@ -240,25 +240,23 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "http://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[蓝胖云]"
       udp: true #如果不能用就改：false
     path: ./yaml_bak/Fakeip/vip2_lanpang
-  
 # ============  -  域名策略组  - ================
 proxy-groups:
   # 总模式：
-  - {name: 默认代理, "type": "select", "proxies": [美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png',}
+  - {name: 默认代理, "type": "select", "proxies": [美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
-  - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'}   # 良心云
-  - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png'}   # 蓝胖云
+  - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'} # 良心云
+  - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png',} # 蓝胖云
   # AI故转分组策略
 
   # 测速服务
-
-  - {name: Speedtest, "type": "select", include-all: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Speedtest.png', proxies: [DIRECT, 默认代理], filter: "^(?!.*(流量|剩余|到期|官网|客服|套餐|邮箱|版本|流媒体)).*$"}
+  - {name: Speedtest, "type": "select", include-all: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Speedtest.png', proxies: [DIRECT, 默认代理], filter: "^(?!.*(流量|剩余|到期|官网|客服|套餐|邮箱|版本|流媒体)).*$",}
   # PT和BT下载
 
   - {name: PT和BT下载, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png'}
@@ -310,36 +308,36 @@ proxy-groups:
   # ====  -  节点分组策略 - ====
 
   # 自动测速场景
-  - {name: VIP1-香港, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1ED\U0001F1F0|香港|港|(\\b(HK|Hong|HKG|\U0001F1ED\U0001F1F0)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
-  - {name: VIP2-香港, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1ED\U0001F1F0|香港|港|(\\b(HK|Hong|HKG|\U0001F1ED\U0001F1F0)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
-  - {name: 香港, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-香港, VIP2-香港], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
-  - {name: VIP1-台湾, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1E8\U0001F1F3|台湾|(\\b(\U0001F1F9\U0001F1FC|TW|Taiwan|ROC|\U0001F1F9\U0001F1FC)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
-  - {name: VIP2-台湾, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1E8\U0001F1F3|台湾|(\\b(\U0001F1F9\U0001F1FC|TW|Taiwan|ROC|\U0001F1F9\U0001F1FC)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
-  - {name: 台湾, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-台湾, VIP2-台湾], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
-  - {name: VIP1-新加坡, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F8\U0001F1EC|新加坡|狮|(\\b(SG|Singapore|SIN|\U0001F1F8\U0001F1EC)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
-  - {name: VIP2-新加坡, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F8\U0001F1EC|新加坡|狮|(\\b(SG|Singapore|SIN|\U0001F1F8\U0001F1EC)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
-  - {name: 新加坡, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-新加坡, VIP2-新加坡], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
-  - {name: VIP1-日本, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1EF\U0001F1F5|日本|川日|东京|大阪|泉日|埼玉|(\\b(JP|Japan|NRT|HND|\U0001F1EF\U0001F1F5)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
-  - {name: VIP2-日本, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1EF\U0001F1F5|日本|川日|东京|大阪|泉日|埼玉|(\\b(JP|Japan|NRT|HND|\U0001F1EF\U0001F1F5)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
-  - {name: 日本, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-日本, VIP2-日本], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
-  - {name: VIP1-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
-  - {name: VIP2-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
-  - {name: 韩国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-韩国, VIP2-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
-  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?=.*(高速|CTCU|洛杉矶))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: VIP2-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP1-香港, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1ED\U0001F1F0|香港|港|(\\b(HK|Hong|HKG|\U0001F1ED\U0001F1F0)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
+  - {name: VIP2-香港, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1ED\U0001F1F0|香港|港|(\\b(HK|Hong|HKG|\U0001F1ED\U0001F1F0)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
+  - {name: 香港, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-香港, VIP2-香港], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HK.png'}
+  - {name: VIP1-台湾, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1E8\U0001F1F3|台湾|(\\b(\U0001F1F9\U0001F1FC|TW|Taiwan|ROC|\U0001F1F9\U0001F1FC)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
+  - {name: VIP2-台湾, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1E8\U0001F1F3|台湾|(\\b(\U0001F1F9\U0001F1FC|TW|Taiwan|ROC|\U0001F1F9\U0001F1FC)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
+  - {name: 台湾, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-台湾, VIP2-台湾], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
+  - {name: VIP1-新加坡, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F8\U0001F1EC|新加坡|狮|(\\b(SG|Singapore|SIN|\U0001F1F8\U0001F1EC)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
+  - {name: VIP2-新加坡, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F8\U0001F1EC|新加坡|狮|(\\b(SG|Singapore|SIN|\U0001F1F8\U0001F1EC)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
+  - {name: 新加坡, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-新加坡, VIP2-新加坡], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
+  - {name: VIP1-日本, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1EF\U0001F1F5|日本|川日|东京|大阪|泉日|埼玉|(\\b(JP|Japan|NRT|HND|\U0001F1EF\U0001F1F5)\\b)))(?!.*(排除1|排除2|5x|流媒体)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
+  - {name: VIP2-日本, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1EF\U0001F1F5|日本|川日|东京|大阪|泉日|埼玉|(\\b(JP|Japan|NRT|HND|\U0001F1EF\U0001F1F5)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
+  - {name: 日本, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-日本, VIP2-日本], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
+  - {name: VIP1-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
+  - {name: VIP2-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
+  - {name: 韩国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-韩国, VIP2-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
+  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?=.*(高速|CTCU|洛杉矶))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP2-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
-  - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连1|直连2|直连3|直连4|直连5|Pro 3))((?!.*(排除1|排除2|5x|3倍扣量|Pro Max|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连1|直连2|直连3|直连4|直连5|Pro 3))((?!.*(排除1|排除2|5x|3倍扣量|Pro Max|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: Claude专线, "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
-  - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: VIP1-日本流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(日本))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
-  - {name: VIP1-新加坡流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(新加坡))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
-  - {name: VIP1-台湾流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "http://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(台湾))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
-  - {name: 美国流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: 日本流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-日本流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
-  - {name: 新加坡流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-新加坡流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
-  - {name: 台湾流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "http://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-台湾流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
+  - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP1-日本流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(日本))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
+  - {name: VIP1-新加坡流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(新加坡))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
+  - {name: VIP1-台湾流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(台湾))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
+  - {name: 美国流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: 日本流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-日本流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
+  - {name: 新加坡流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-新加坡流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SG.png'}
+  - {name: 台湾流媒体, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-台湾流媒体], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TW.png'}
   - {name: 全球手动, type: select, include-all: true, filter: '^(?!.*(DIRECT|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))', icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/America_Map.png',}
   # VIP 优先级：主用线路（VIP1 优先，VIP2 全局兜底）
   # 负载均衡场景（VIP1 优先，VIP2 兜底）
@@ -562,17 +560,13 @@ profile:
 #GEO数据库
 geodata-mode: true
 geox-url:
-  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
   geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 #启动参数
 allow-lan: true
 mode: rule
-log-level: info
-# ↑ 排障期临时开 info；观察完请降到 warning。
-#   info 会打印【每一条连接】（[TCP] 198.18.x.x:1234 --> 域名:443 using 香港），
-#   路由器上多设备全天跑，量非常大，别长期开着，也别配 debug。
-#   降到 warning 后仍能看到节点错误/订阅失败，只是没有连接流水。
-ipv6: true
+log-level: error
+ipv6: false
 unified-delay: true
 hosts:
   services.googleapis.cn: 74.125.193.94
@@ -613,13 +607,10 @@ dns:
     - RULE-SET,cn,real-ip
     - RULE-SET,cloudflare@cn,real-ip
     - RULE-SET,microsoft@cn,real-ip
-    # 公司内网域名: 返回真实 IP, 否则 fake-ip 段地址在内网不可路由
     - DOMAIN-SUFFIX,bilibili.co,real-ip
     - DOMAIN-SUFFIX,bilibili.local,real-ip
-    - DOMAIN,cn-hk-quotes-mcp.zhushihao710.workers.dev,real-ip
     - DOMAIN,connectors.api.openai.com,real-ip
-  # V6.0: 公司内网域名 -> 内网 DNS 优先, 与公共 DoH 并发竞速
-  # (在家 10.19.x 不可达时公共 DoH 先返回不失败; 在公司内网 DNS 先返回)
+    - DOMAIN,cn-hk-quotes-mcp.zhushihao710.workers.dev,real-ip
   nameserver-policy:
     '+.bilibili.co':
       - 10.19.193.249
@@ -631,7 +622,6 @@ dns:
       - 10.19.193.250
       - https://223.5.5.5/dns-query
       - https://119.29.29.29/dns-query
-    # V6.0: 国内/直连域名 -> 国内 DoH (CDN 就近, 不过代理)
     'rule-set:cn':
       - https://223.5.5.5/dns-query
       - https://119.29.29.29/dns-query
@@ -647,18 +637,13 @@ dns:
     'rule-set:private':
       - https://223.5.5.5/dns-query
       - https://119.29.29.29/dns-query
-  # V6.0: 默认 nameserver 改境外 DoH -- respect-rules:true 下 DoH 连接
-  # 按规则路由 (8.8.8.8->google_ip->Google组->代理; 1.1.1.1->cloudflare_ip
-  # ->Cloudflare组->代理), 代理域名不再经阿里/腾讯 DoH 从家宽直连出去
-  nameserver:
-    - https://8.8.8.8/dns-query
-    - https://1.1.1.1/dns-query
-  # DIRECT 出站解析: 国内 DoH
   direct-nameserver:
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
-  # 代理节点自身域名解析: 必须国内直连, 否则循环
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://119.29.29.29/dns-query
+  nameserver:
+    - https://8.8.8.8/dns-query
+    - https://1.1.1.1/dns-query
 tproxy-port: 23458
