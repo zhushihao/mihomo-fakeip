@@ -205,6 +205,8 @@
 #                   Gemini 线备用出口扩容(共8节点), 探针自动甄别                          #
 #   V6.20 (10-24) 新增 US-AI 两层组(Prime=美国05+高速05 同IP 203.10.97.121 零位置变化,   #
 #                   Stby=高速02/04 同城备胎); 探针 chatgpt trace(200=通/超时=被掐);      #
+#   V6.21 (10-24) 依世豪裁定组名按服务命名: AI专线->Google 专线, US-AI->GPT 专线            #
+#                   (Prime/Stby 同步更名); Claude专线 不变; 成员引用同步加引号            #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
 #                   专线04 探针失败时自动落回美国四节点                                  #
 #                   Gemini/Google 首项改指 AI专线; Claude线维持 .27/.28 不动            #
@@ -285,9 +287,9 @@ proxy-groups:
   - {name: 漏网之鱼, "type": "select", "proxies": [默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png'}
   # AI 相关服务
   - {name: AI集合, "type": "select", "proxies": [默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
-  - {name: Gemini, "type": "select", "proxies": [AI专线, Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
-  - {name: ChatGPT, "type": "select", "proxies": [US-AI, 默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
-  - {name: Claude.AI, "type": "select", "proxies": [AI专线, Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
+  - {name: Gemini, "type": "select", "proxies": ["Google 专线", Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
+  - {name: ChatGPT, "type": "select", "proxies": ["GPT 专线", 默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
+  - {name: Claude.AI, "type": "select", "proxies": ["Google 专线", Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
@@ -298,7 +300,7 @@ proxy-groups:
 
   - {name: GitHub, "type": "select", "proxies": [默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png'}
   - {name: Cloudflare, "type": "select", "proxies": [默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
-  - {name: Google, "type": "select", "proxies": [AI专线, Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
+  - {name: Google, "type": "select", "proxies": ["Google 专线", Claude专线, 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: YouTube, "type": "select", "proxies": [默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png'}
   - {name: 国外媒体集合, "type": "select", "proxies": [默认代理, Claude专线, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png'}
   # 社交平台策略
@@ -351,10 +353,10 @@ proxy-groups:
   - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连1|直连2|直连3|直连4|直连5|Pro 3))((?!.*(排除1|排除2|5x|3倍扣量|Pro Max|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: Claude-LA, "type": "fallback", use: [vip1], filter: "美国洛杉矶01", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   - {name: Claude-US, "type": "fallback", use: [vip1], filter: "美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
-  - {name: US-AI-Prime, "type": "fallback", use: [vip1], filter: '美国05\||美国高速05\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
-  - {name: US-AI-Stby, "type": "fallback", use: [vip1], filter: '美国高速0[24]\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
-  - {name: US-AI, "type": "fallback", proxies: [US-AI-Prime, US-AI-Stby], url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
-  - {name: AI专线, "type": "fallback", use: [vip1], filter: "新加坡专线04|美国高速0[34]|美国0[13]|日本高速0[16]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: "GPT 专线-Prime", "type": "fallback", use: [vip1], filter: '美国05\||美国高速05\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
+  - {name: "GPT 专线-Stby", "type": "fallback", use: [vip1], filter: '美国高速0[24]\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
+  - {name: "GPT 专线", "type": "fallback", proxies: ["GPT 专线-Prime", "GPT 专线-Stby"], url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
+  - {name: "Google 专线", "type": "fallback", use: [vip1], filter: "新加坡专线04|美国高速0[34]|美国0[13]|日本高速0[16]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: Claude专线, "type": "fallback", proxies: [Claude-LA, Claude-US], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
   - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
