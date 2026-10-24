@@ -217,6 +217,8 @@
 #                   Singapore(其余 41 判 China + 9 判 HK 不在清单), 无跨城备胎可用;        #
 #   V6.26 (10-24) Claude 主线回新加坡(账号长期驻留地): SG 子组(专线03/04,机场已换新IP        #
 #                   56.10.130.240=76分/47.129.133.24=64分,旧84/83失效)为主线;               #
+#   V6.27 (10-24) 依世豪裁定: 默认代理成员表加入三专线(Claude/Google/GPT, 美国之后),          #
+#                   全局兜底入口可手动切任意专线; 各 AI 策略组维持自家专线不动               #
 #                   LA 子组扩为 洛杉矶01+高速02(同IP .28, 89分对)灾难备胎                   #
 #                   Gemini 容灾=蓝胖云充值后补测(待办)                                    #
 #                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
@@ -285,7 +287,7 @@ proxy-providers:
 # ============  -  域名策略组  - ================
 proxy-groups:
   # 总模式：
-  - {name: 默认代理, "type": "select", "proxies": [美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
+  - {name: 默认代理, "type": "select", "proxies": [美国, "Claude 专线", "Google 专线", "GPT 专线", 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
   - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'} # 良心云
   - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png',} # 蓝胖云
