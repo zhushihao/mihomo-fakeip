@@ -275,6 +275,8 @@
 #                   icon 复用 lanpangyun.png(同机场家族)                                         #
 #   V7.2 (10-25) 依世豪要求统一三池显示名: vip2 前缀 [蓝胖云]->[蓝胖云1], vip3 加前缀 [蓝胖云2];      #
 #                   改法=provider override.additional-prefix(内核层改名, filter 子串匹配不受影响)  #
+#   V7.2b (10-25) LPY1 两层 filter 排除 Pro 系(1号独有9个Pro/3倍扣量节点, 白烧流量):            #
+#                   新加坡(?!.*Pro) / 美国(?!.*Pro)                                            #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -331,7 +333,7 @@ proxy-groups:
   - {name: Gemini, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
   - {name: "新加坡 AI 专线", "type": "fallback", proxies: ["SG-LPY2", "SG-LPY1", "SG-LX"], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LPY2, "type": "fallback", use: [vip3], filter: "新加坡", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡(?!.*Pro)", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LX, "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: ChatGPT, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
   - {name: Claude.AI, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
@@ -342,7 +344,7 @@ proxy-groups:
   - {name: US-LPY2, "type": "fallback", proxies: [US-LPY2a, US-LPY2b], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LPY2a, "type": "fallback", use: [vip3], filter: "美国直连2", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LPY2b, "type": "fallback", use: [vip3], filter: "美国直连1|美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY1, "type": "fallback", use: [vip2], filter: "美国", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-LPY1, "type": "fallback", use: [vip2], filter: "美国(?!.*Pro)", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LX, "type": "fallback", use: [vip1], filter: "美国洛杉矶01|美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
   - {name: Google, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
