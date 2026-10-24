@@ -268,6 +268,8 @@
 #   V7.0 (10-25) 组排序调整(世豪确认方案A): 默认代理回最前, 三条AI专线+子组移到对应策略组后        #
 #                   (新加坡线跟Gemini, 美国线跟ChatGPT/Claude.AI, 通用线放AI组尾); 版本号升7.0     #
 #                   通用AI专线 icon 换 Qure Global.png(原 WorldMap.png 不存在破图);               #
+#   V7.01 (10-25) 三 provider health-check lazy:false(世豪批准): 面板存活状态实时化,             #
+#                   根治"面板显示活、点测速死"的陈旧缓存误导; 代价=常驻探测小流量               #
 #                   清理 V6.28 漏删孤儿组 GPT 专线-Prime/Stby(无引用)                             #
 proxies:
 # ============= - 加订阅链接位置 - ============
@@ -277,14 +279,14 @@ proxy-providers:
     type: http
     path: ./yaml_bak/AP_MyConfig/lpy2_test
     interval: 86400
-    health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: true}
+    health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: false}
   # 良心云 —— VIP1，主用优先
   vip1:
     url: https://liangxin.xyz/api/v1/liangxin?OwO=4fdf5bcdf08aa3f2fcb28c914b4ef8bc #修改你的机场1订阅地址（记得前后隔个空格）
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": false}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[良心云]"
@@ -296,7 +298,7 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": false}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[蓝胖云]"
