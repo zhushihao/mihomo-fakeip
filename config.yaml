@@ -271,6 +271,8 @@
 #   V7.01 (10-25) 三 provider health-check lazy:false(世豪批准): 面板存活状态实时化,             #
 #                   根治"面板显示活、点测速死"的陈旧缓存误导; 代价=常驻探测小流量               #
 #                   清理 V6.28 漏删孤儿组 GPT 专线-Prime/Stby(无引用)                             #
+#   V7.1 (10-25) 世豪要求: 新增 VIP3 信息组(蓝胖云2号, 168GB/2027-10-24 到期), 排 VIP2 信息后;     #
+#                   icon 复用 lanpangyun.png(同机场家族)                                         #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -310,6 +312,7 @@ proxy-groups:
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
   - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'} # 良心云
   - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png',} # 蓝胖云
+  - {name: VIP3 信息, type: select, use: [vip3], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png',}
   # AI故转分组策略
 
   # 测速服务
