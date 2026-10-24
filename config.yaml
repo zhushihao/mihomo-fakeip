@@ -209,6 +209,9 @@
 #                   (Prime/Stby 同步更名); Claude专线 不变; 成员引用同步加引号            #
 #   V6.22 (10-24) Claude专线 -> Claude 专线（补空格对齐）；修复 Claude.AI 首项曾被       #
 #                   插件重写污染为 AI专线 的问题（恢复设计意图）；成员引用加引号           #
+#   V6.23 (10-24) Google 专线收窄为纯新加坡专线03/04(AWS SG 唯一验证合格地区):              #
+#                   日本GSL带凭证实测被拦(19:26); 依世豪"专线不换地区"原则,                #
+#                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
 #                   专线04 探针失败时自动落回美国四节点                                  #
 #                   Gemini/Google 首项改指 AI专线; Claude线维持 .27/.28 不动            #
@@ -358,7 +361,7 @@ proxy-groups:
   - {name: "GPT 专线-Prime", "type": "fallback", use: [vip1], filter: '美国05\||美国高速05\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
   - {name: "GPT 专线-Stby", "type": "fallback", use: [vip1], filter: '美国高速0[24]\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
   - {name: "GPT 专线", "type": "fallback", proxies: ["GPT 专线-Prime", "GPT 专线-Stby"], url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
-  - {name: "Google 专线", "type": "fallback", use: [vip1], filter: "新加坡专线04|美国高速0[34]|美国0[13]|日本高速0[16]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: "Google 专线", "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: "Claude 专线", "type": "fallback", proxies: [Claude-LA, Claude-US], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
   - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
