@@ -224,6 +224,7 @@
 #                   通用AI专线(VIP1-美国 url-test 全池, 承载谷歌搜索/GitHub 大流量不耗蓝胖额度);  #
 #                   旧 Claude专线/Google专线/GPT专线/Claude-SG/LA/US 与临时 LPY2-* 组全部收敛删除  #
 #                   LA 子组扩为 洛杉矶01+高速02(同IP .28, 89分对)灾难备胎                   #
+#   V6.28b (10-24) 清除已删组全部引用(默认代理/26组成员表的 Claude 专线→美国 AI 专线)          #
 #                   Gemini 容灾=蓝胖云充值后补测(待办)                                    #
 #                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
@@ -306,7 +307,7 @@ proxy-groups:
   - {name: US-LX, "type": "fallback", use: [vip1], filter: "美国洛杉矶01|美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "美国 AI 专线", "type": "fallback", proxies: ["US-LPY2", "US-LPY1", "US-LX"], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, 默认代理, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WorldMap.png'}
-  - {name: 默认代理, "type": "select", "proxies": [LPY2-TEST, 美国, "Claude 专线", "Google 专线", "GPT 专线", 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
+  - {name: 默认代理, "type": "select", "proxies": [美国, "新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
   - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'} # 良心云
   - {name: VIP2 信息, type: select, use: [vip2], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/lanpangyun.png',} # 蓝胖云
@@ -318,7 +319,7 @@ proxy-groups:
 
   - {name: PT和BT下载, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png'}
   # 漏网之鱼策略  
-  - {name: 漏网之鱼, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png'}
+  - {name: 漏网之鱼, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png'}
   # AI 相关服务
   - {name: AI集合, "type": "select", "proxies": [默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
   - {name: Gemini, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
@@ -327,40 +328,40 @@ proxy-groups:
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
-  - {name: Apple, "type": "select", "proxies": [默认代理, "Claude 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
+  - {name: Apple, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
   - {name: Bilibili, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png'}
-  - {name: Microsoft, "type": "select", "proxies": [默认代理, "Claude 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png',}
+  - {name: Microsoft, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png',}
   # 国外
 
-  - {name: GitHub, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png'}
-  - {name: Cloudflare, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
+  - {name: GitHub, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png'}
+  - {name: Cloudflare, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png'}
   - {name: Google, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
-  - {name: YouTube, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png'}
-  - {name: 国外媒体集合, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png'}
+  - {name: YouTube, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png'}
+  - {name: 国外媒体集合, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png'}
   # 社交平台策略
-  - {name: Telegram, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png'}
-  - {name: Whatsapp, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WeChat.png'}
-  - {name: Twitter, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png'}
-  - {name: Instagram, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png'}
-  - {name: Facebook, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png'}
-  - {name: 国外社交集合, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
+  - {name: Telegram, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png'}
+  - {name: Whatsapp, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WeChat.png'}
+  - {name: Twitter, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png'}
+  - {name: Instagram, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png'}
+  - {name: Facebook, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png'}
+  - {name: 国外社交集合, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
   # 音视频
-  - {name: Spotify, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png'}
-  - {name: Netflix, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png'}
-  - {name: TikTok, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png'}
-  - {name: Porn, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Pornhub.png'}
-  - {name: HBO, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png'}
-  - {name: Emby, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png'}
-  - {name: Disney, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney.png'}
+  - {name: Spotify, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png'}
+  - {name: Netflix, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png'}
+  - {name: TikTok, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png'}
+  - {name: Porn, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Pornhub.png'}
+  - {name: HBO, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png'}
+  - {name: Emby, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png'}
+  - {name: Disney, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney.png'}
   # 港台媒体
-  - {name: 港台媒体, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TVB.png'}
+  - {name: 港台媒体, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 美国流媒体, 日本流媒体, 新加坡流媒体, 台湾流媒体, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TVB.png'}
   # 游戏服务
-  - {name: Xbox, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Xbox.png'}
-  - {name: Steam, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png'}
-  - {name: Nintendo, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Nintendo.png'}
-  - {name: PlayStation, "type": "select", "proxies": [DIRECT, 默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/PlayStation_1.png'}
+  - {name: Xbox, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Xbox.png'}
+  - {name: Steam, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png'}
+  - {name: Nintendo, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Nintendo.png'}
+  - {name: PlayStation, "type": "select", "proxies": [DIRECT, 默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/PlayStation_1.png'}
   # 兜底
-  - {name: 国外网站, "type": "select", "proxies": [默认代理, "Claude 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Nations.png'}
+  - {name: 国外网站, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Nations.png'}
   - {name: 国内网站, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png',}
   # ====  -  节点分组策略 - ====
 
