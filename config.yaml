@@ -273,6 +273,8 @@
 #                   清理 V6.28 漏删孤儿组 GPT 专线-Prime/Stby(无引用)                             #
 #   V7.1 (10-25) 世豪要求: 新增 VIP3 信息组(蓝胖云2号, 168GB/2027-10-24 到期), 排 VIP2 信息后;     #
 #                   icon 复用 lanpangyun.png(同机场家族)                                         #
+#   V7.2 (10-25) 依世豪要求统一三池显示名: vip2 前缀 [蓝胖云]->[蓝胖云1], vip3 加前缀 [蓝胖云2];      #
+#                   改法=provider override.additional-prefix(内核层改名, filter 子串匹配不受影响)  #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -281,6 +283,8 @@ proxy-providers:
     type: http
     path: ./yaml_bak/AP_MyConfig/lpy2_test
     interval: 86400
+    override:
+      additional-prefix: "[蓝胖云2]"
     health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: false}
   # 良心云 —— VIP1，主用优先
   vip1:
@@ -303,7 +307,7 @@ proxy-providers:
     "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": false}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
-      additional-prefix: "[蓝胖云]"
+      additional-prefix: "[蓝胖云1]"
       udp: true #如果不能用就改：false
     path: ./yaml_bak/Fakeip/vip2_lanpang
 # ============  -  域名策略组  - ================
