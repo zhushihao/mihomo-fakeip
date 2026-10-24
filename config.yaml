@@ -226,6 +226,8 @@
 #                   LA 子组扩为 洛杉矶01+高速02(同IP .28, 89分对)灾难备胎                   #
 #   V6.28b (10-24) 清除已删组全部引用(默认代理/26组成员表的 Claude 专线→美国 AI 专线)          #
 #   V6.28c (10-24) 通用 AI 专线去掉 默认代理 成员(与默认代理互指成环 loop detected)          #
+#   V6.28d (10-24) US-LPY2 两层化: 直连2(95分)独占首层, 直连1/3(85分)次层 — fallback 按订阅序非分数,     #
+#                   拆层强制 95 分最优先(世豪裁定)                                          #
 #                   Gemini 容灾=蓝胖云充值后补测(待办)                                    #
 #                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
@@ -303,7 +305,9 @@ proxy-groups:
   - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LX, "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: "新加坡 AI 专线", "type": "fallback", proxies: ["SG-LPY2", "SG-LPY1", "SG-LX"], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: US-LPY2, "type": "fallback", use: [vip3], filter: "美国直连[123]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-LPY2a, "type": "fallback", use: [vip3], filter: "美国直连2", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-LPY2b, "type": "fallback", use: [vip3], filter: "美国直连1|美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-LPY2, "type": "fallback", proxies: [US-LPY2a, US-LPY2b], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LPY1, "type": "fallback", use: [vip2], filter: "美国", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LX, "type": "fallback", use: [vip1], filter: "美国洛杉矶01|美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "美国 AI 专线", "type": "fallback", proxies: ["US-LPY2", "US-LPY1", "US-LX"], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
