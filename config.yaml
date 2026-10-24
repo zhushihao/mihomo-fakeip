@@ -215,6 +215,9 @@
 #                   JP 子组(日本高速01x2+06 GSL 同段)跨城 fallback; 组内同城再跨城          #
 #   V6.25 (10-24) 删除 Google 专线 JP/SG 子组回单层: 全量扫描定谳 53 节点仅专线03/04 判        #
 #                   Singapore(其余 41 判 China + 9 判 HK 不在清单), 无跨城备胎可用;        #
+#   V6.26 (10-24) Claude 主线回新加坡(账号长期驻留地): SG 子组(专线03/04,机场已换新IP        #
+#                   56.10.130.240=76分/47.129.133.24=64分,旧84/83失效)为主线;               #
+#                   LA 子组扩为 洛杉矶01+高速02(同IP .28, 89分对)灾难备胎                   #
 #                   Gemini 容灾=蓝胖云充值后补测(待办)                                    #
 #                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
@@ -361,13 +364,13 @@ proxy-groups:
   - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
   - {name: VIP2-美国AI, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*(美国))(?=.*(直连1|直连2|直连3|直连4|直连5|Pro 3))((?!.*(排除1|排除2|5x|3倍扣量|Pro Max|流媒体|解锁|0.01x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: Claude-LA, "type": "fallback", use: [vip1], filter: "美国洛杉矶01", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
-  - {name: Claude-US, "type": "fallback", use: [vip1], filter: "美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
+  - {name: Claude-SG, "type": "fallback", use: [vip1], filter: '新加坡专线0[34]', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
+  - {name: Claude-LA, "type": "fallback", use: [vip1], filter: '美国洛杉矶01\||美国高速02\|', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   - {name: "GPT 专线-Prime", "type": "fallback", use: [vip1], filter: '美国05\||美国高速05\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
   - {name: "GPT 专线-Stby", "type": "fallback", use: [vip1], filter: '美国高速0[24]\|', url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
   - {name: "GPT 专线", "type": "fallback", proxies: ["GPT 专线-Prime", "GPT 专线-Stby"], url: 'https://chatgpt.com/cdn-cgi/trace', expected-status: '200', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/openai.png'}
   - {name: "Google 专线", "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: "Claude 专线", "type": "fallback", proxies: [Claude-LA, Claude-US], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
+  - {name: "Claude 专线", "type": "fallback", proxies: ["Claude-SG", "Claude-LA"], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 流媒体专用：只放「流媒体」标记的节点（vip2 无流媒体节点，故包装组无需二级兜底）
   - {name: VIP1-美国流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(美国))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP1-日本流媒体, type: url-test, interval: 5, lazy: false, tolerance: 50, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*(日本))(?=.*(流媒体))((?!.*(排除1|排除2|5x)).)*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/JP.png'}
