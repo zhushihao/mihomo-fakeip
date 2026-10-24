@@ -225,6 +225,7 @@
 #                   旧 Claude专线/Google专线/GPT专线/Claude-SG/LA/US 与临时 LPY2-* 组全部收敛删除  #
 #                   LA 子组扩为 洛杉矶01+高速02(同IP .28, 89分对)灾难备胎                   #
 #   V6.28b (10-24) 清除已删组全部引用(默认代理/26组成员表的 Claude 专线→美国 AI 专线)          #
+#   V6.28c (10-24) 通用 AI 专线去掉 默认代理 成员(与默认代理互指成环 loop detected)          #
 #                   Gemini 容灾=蓝胖云充值后补测(待办)                                    #
 #                   宁可专线死断线也不跨区跳变; 美日段全部移出 Gemini 成员池               #
 #                   ChatGPT 默认首项=US-AI; OpenAI 站点级大上传实测双过                  #
@@ -306,7 +307,7 @@ proxy-groups:
   - {name: US-LPY1, "type": "fallback", use: [vip2], filter: "美国", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-LX, "type": "fallback", use: [vip1], filter: "美国洛杉矶01|美国高速0[12]", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "美国 AI 专线", "type": "fallback", proxies: ["US-LPY2", "US-LPY1", "US-LX"], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, 默认代理, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WorldMap.png'}
+  - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WorldMap.png'}
   - {name: 默认代理, "type": "select", "proxies": [美国, "新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png'}
   # 机场信息节点（仅用于查看剩余流量/套餐到期，非代理）
   - {name: VIP1 信息, type: select, use: [vip1], filter: "^(?=.*(流量|剩余|到期|官网|套餐|邮箱|客服)).*$", icon: 'https://raw.githubusercontent.com/zhushihao/mihomo-fakeip/main/icons/liangxin.png'} # 良心云
