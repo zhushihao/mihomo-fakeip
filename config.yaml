@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.6（2026-10-28）===                                     #
+#  === 当前版本：V7.7（2026-10-28）===                                     #
 #  版本历史：                                                             #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
 #                 版本」行失修停在 V6.11，实际已演进至 V7.2b，本版一并修正）：#
@@ -288,13 +288,12 @@
 #                   新加坡(?!.*Pro) / 美国(?!.*Pro)                                            #
 #   V7.4 (10-28) 新加坡 AI 专线长红第一刀: 原 8 节点里 4 个 HY2 探活 0/10; 放宽 SG-LPY1 过滤器    #
 #                   为 新加坡(?!.*Pro Max), 只挡 3 倍扣量的 Pro Max(美国侧 filter 不动)            #
-#   V7.6 (10-28) 第一刀后仍 red: 日志实锤真实流量出口是 54.255.154.207(m1.p7y123.com 与           #
-#                   m1.pp7y123.com 解析到同一台), 该机 233ms/12.5% 丢包, 探活能过但真实 TLS        #
-#                   i/o timeout; 故 SG-LPY1 收紧为 新加坡直连Pro(?! Max) 只留 81-102ms 的 1 倍档   #
-#                   Pro / Pro 2, 并把 SG-LPY1 提到 fallback 首位, 甩掉劣化机与两个死 HY2            #
 #   V7.5 (10-28) 通用/常规美国容灾扩容(世豪指示): VIP1-美国 纳入全部 12 个良心云美区节点;          #
 #                   去「高速|CTCU|洛杉矶」正向限制, 并入 5 个 0.1x 流媒体节点做后备, 即使高速       #
 #                   全挂也能秒级顶上(184ms), 彻底消除通用 AI 专线/常规美国池超时断网风险           #
+#   V7.7 (10-28) 世豪裁定: 新加坡 AI 专线只做顺序调整 —— SG-LPY1 提到 fallback 首位, SG-LPY2      #
+#                   退第二位, SG-LX 第三; SG-LPY1 的 filter 维持 V7.4 的 新加坡(?!.*Pro Max),      #
+#                   不收紧到只留 Pro 系(撤回 V7.6 那版做法)                                        #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -351,7 +350,7 @@ proxy-groups:
   - {name: Gemini, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
   - {name: "新加坡 AI 专线", "type": "fallback", proxies: ["SG-LPY1", "SG-LPY2", "SG-LX"], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LPY2, "type": "fallback", use: [vip3], filter: "新加坡", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡直连Pro(?! Max)", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡(?!.*Pro Max)", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LX, "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: ChatGPT, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
   - {name: Claude.AI, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
