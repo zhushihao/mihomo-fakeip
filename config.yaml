@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.4（2026-10-28）===                                     #
+#  === 当前版本：V7.5（2026-10-28）===                                     #
 #  版本历史：                                                             #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
 #                 版本」行失修停在 V6.11，实际已演进至 V7.2b，本版一并修正）：#
@@ -290,6 +290,9 @@
 #                   劣化服务器(233ms/12.5%丢包); 放宽 SG-LPY1 为 新加坡(?!.*Pro Max), 只挡标了     #
 #                   3 倍扣量的 Pro Max, 放行实测 10/10、79-91ms 的 1 倍档 Pro / Pro 2            #
 #                   (美国侧 filter 不动, 美国 AI 专线现状健康)                                    #
+#   V7.5 (10-28) 通用/常规美国容灾扩容(世豪指示): VIP1-美国 纳入全部 12 个良心云美区节点;          #
+#                   去「高速|CTCU|洛杉矶」正向限制, 并入 5 个 0.1x 流媒体节点做后备, 即使高速       #
+#                   全挂也能秒级顶上(184ms), 彻底消除通用 AI 专线/常规美国池超时断网风险           #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -413,7 +416,7 @@ proxy-groups:
   - {name: VIP1-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
   - {name: VIP2-韩国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1F0\U0001F1F7|韩国|首尔|(\\b(KR|Korea|SEL|\U0001F1F0\U0001F1F7)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
   - {name: 韩国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-韩国, VIP2-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/KR.png'}
-  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?=.*(高速|CTCU|洛杉矶))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: VIP1-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip1], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: VIP2-美国, type: url-test, interval: 5, tolerance: 50, lazy: false, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: true, use: [vip2], filter: "^(?=.*((?i)\U0001F1FA\U0001F1F8|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\\b(US|USA|United States|LAX|\U0001F1FA\U0001F1F8)\\b)))(?!.*(排除1|排除2|5x)).*$", icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: 美国, type: fallback, interval: 5, lazy: false, disable-udp: false, url: "https://www.gstatic.com/generate_204", timeout: 3000, max-failed-times: 2, hidden: false, proxies: [VIP1-美国, VIP2-美国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   # AI 专用：正向只留 IP 信誉干净的节点（排除「流媒体/解锁」类共享节点，避开 Google 风控）
