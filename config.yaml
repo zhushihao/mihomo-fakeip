@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.8a（2026-10-28）===                                    #
+#  === 当前版本：V7.8b（2026-10-30）===                                    #
 #  版本历史：                                                             #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
 #                 版本」行失修停在 V6.11，实际已演进至 V7.2b，本版一并修正）：#
@@ -303,6 +303,10 @@
 #                   干掉「新加坡直连Pro」(谷歌判 China/76分) 与 2 台 HY2(握手超时);                #
 #                   SG-LPY2 收紧为 新加坡直连02, 同样干掉 2 台 HY2; SG-LX(专线03/04) 不动           #
 #                   双机实测对照: 直连02=Singapore/85分, Pro2=Singapore/81分, Pro=China/76分       #
+#   V7.8b (10-30) 同质量同层架构(世豪裁定): 不再按 LPY1/LPY2 账号分层, 改为按质量分层;            #
+#                   每个质量子层同时接入 [vip2, vip3] 双池, 1号在前2号在后自动热备, 彻底消除单点;   #
+#                   美区: US-TierA(89分直连4) -> US-TierB(76~79分直连1/Pro2/Pro3) -> US-TierC(71分直连3);#
+#                   新区: SG-TierA(85分直连02) -> SG-TierB(81分Pro2) -> SG-LX(良心云专线)         #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -357,23 +361,19 @@ proxy-groups:
   # AI 相关服务
   - {name: AI集合, "type": "select", "proxies": [默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
   - {name: Gemini, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
-  - {name: "新加坡 AI 专线", "type": "fallback", proxies: ["SG-LPY1", "SG-LPY2", "SG-LX"], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: SG-LPY2, "type": "fallback", use: [vip3], filter: "新加坡直连02", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
-  - {name: SG-LPY1, "type": "fallback", use: [vip2], filter: "新加坡直连02|新加坡直连Pro 2", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: "新加坡 AI 专线", "type": "fallback", proxies: [SG-TierA, SG-TierB, SG-LX], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: SG-TierA, "type": "fallback", use: [vip2, vip3], filter: "新加坡直连02", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
+  - {name: SG-TierB, "type": "fallback", use: [vip2, vip3], filter: "新加坡直连Pro 2", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-LX, "type": "fallback", use: [vip1], filter: "新加坡专线0[34]", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: ChatGPT, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png'}
   - {name: Claude.AI, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/claude-ai.png'}
   # 国内
   # 注：Apple / Microsoft 全集含大量海外域（且 microsoft 还吞了 github、xbox），
   #     国内部分已由 apple@cn / microsoft@cn 单独直连，故全集默认改走代理，DIRECT 退为备选
-  - {name: "美国 AI 专线", "type": "fallback", proxies: [US-LPY1, US-LPY2], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY2, "type": "fallback", proxies: [US-LPY2a, US-LPY2b], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY2a, "type": "fallback", use: [vip3], filter: "美国直连4", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY2b, "type": "fallback", use: [vip3], filter: "美国直连1|美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY1, "type": "fallback", proxies: [US-LPY1a, US-LPY1b, US-LPY1c], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY1a, "type": "fallback", use: [vip2], filter: "美国直连4", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY1b, "type": "fallback", use: [vip2], filter: "美国直连1|美国直连Pro 2|美国直连Pro 3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: US-LPY1c, "type": "fallback", use: [vip2], filter: "美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: "美国 AI 专线", "type": "fallback", proxies: [US-TierA, US-TierB, US-TierC], url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-TierA, "type": "fallback", use: [vip2, vip3], filter: '美国直连[ ]*4', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-TierB, "type": "fallback", use: [vip2, vip3], filter: '美国直连[ ]*1|美国直连Pro 2|美国直连Pro 3', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
+  - {name: US-TierC, "type": "fallback", use: [vip2, vip3], filter: "美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
   - {name: Google, "type": "select", "proxies": ["新加坡 AI 专线", "美国 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: Apple, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
