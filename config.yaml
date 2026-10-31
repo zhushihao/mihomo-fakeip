@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.8c（2026-10-31）===                                    #
+#  === 当前版本：V7.8d（2026-10-31）===                                    #
 #  版本历史：                                                             #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
 #                 版本」行失修停在 V6.11，实际已演进至 V7.2b，本版一并修正）：#
@@ -312,6 +312,10 @@
 #                   -> 新加坡 -> 韩国 -> 全球手动 -> DIRECT;                                      #
 #                   Gemini / Google 默认项改为「美国 AI 专线」, 新加坡 AI 专线退居第二位;           #
 #                   ChatGPT / Claude.AI 维持「美国 AI 专线」首位、「新加坡 AI 专线」第二位        #
+#   V7.8d (10-31) 止血与防盗刷优化(世豪指示): 三 provider health-check 由 lazy:false 改为       #
+#                   lazy:true, 彻底消灭每天 2~3GB 的无感全池测速空耗底噪;                         #
+#                   Google 策略组首位改为「通用 AI 专线」, 避免全家安卓设备 Play 商店更新/大流量   #
+#                   后台下载吸干蓝胖云额度; 真正 AI 业务 (Gemini/ChatGPT/Claude) 依然独享美国AI专线 #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -322,14 +326,14 @@ proxy-providers:
     interval: 86400
     override:
       additional-prefix: "[蓝胖云2]"
-    health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: false}
+    health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: true}
   # 良心云 —— VIP1，主用优先
   vip1:
     url: https://liangxin.xyz/api/v1/liangxin?OwO=4fdf5bcdf08aa3f2fcb28c914b4ef8bc #修改你的机场1订阅地址（记得前后隔个空格）
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": false}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[良心云]"
@@ -341,7 +345,7 @@ proxy-providers:
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
-    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": false}
+    "health-check": {"enable": true, "url": "https://www.gstatic.com/generate_204", "interval": 60, "lazy": true}
     user-agent: "clash.meta.mihomo" #默认或者修改这里为你机场的UA    
     override:
       additional-prefix: "[蓝胖云1]"
@@ -380,7 +384,7 @@ proxy-groups:
   - {name: US-TierB, "type": "fallback", use: [vip2, vip3], filter: '美国直连[ ]*1|美国直连Pro 2|美国直连Pro 3', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-TierC, "type": "fallback", use: [vip2, vip3], filter: "美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, "美国 AI 专线", "新加坡 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
-  - {name: Google, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
+  - {name: Google, "type": "select", "proxies": ["通用 AI 专线", "美国 AI 专线", "新加坡 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: Apple, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
   - {name: Bilibili, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png'}
   - {name: Microsoft, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png',}
