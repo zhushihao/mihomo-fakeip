@@ -2,7 +2,7 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.8d（2026-10-31）===                                    #
+#  === 当前版本：V7.8e（2026-11-01）===                                    #
 #  版本历史：                                                             #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
 #                 版本」行失修停在 V6.11，实际已演进至 V7.2b，本版一并修正）：#
@@ -316,6 +316,11 @@
 #                   lazy:true, 彻底消灭每天 2~3GB 的无感全池测速空耗底噪;                         #
 #                   Google 策略组首位改为「通用 AI 专线」, 避免全家安卓设备 Play 商店更新/大流量   #
 #                   后台下载吸干蓝胖云额度; 真正 AI 业务 (Gemini/ChatGPT/Claude) 依然独享美国AI专线 #
+#   V7.8e (11-1) AI 集合兜底修复(世豪指示): category-ai-!cn 杂鱼 AI 域名此前只能落 默认代理,      #
+#                 而默认代理出口(良心云池)IP 被 OpenAI 判中国 → iPhone 的 ChatGPT App 周边请求     #
+#                 (统计/鉴权辅助域名)漏入该链 → App 报「不支持的国家和地区」; Mac 浏览器版请求       #
+#                 全命中 openai 规则不受影响。修复=AI 集合成员表加入「美国 AI 专线」「新加坡 AI      #
+#                 专线」两条优质线(美国在前), 部署后手动选中「美国 AI 专线」(判 US/10分健康)        #
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
@@ -368,7 +373,7 @@ proxy-groups:
   # 漏网之鱼策略  
   - {name: 漏网之鱼, "type": "select", "proxies": [默认代理, "美国 AI 专线", 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png'}
   # AI 相关服务
-  - {name: AI集合, "type": "select", "proxies": [默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
+  - {name: AI集合, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Siri.png'}
   - {name: Gemini, "type": "select", "proxies": ["美国 AI 专线", "新加坡 AI 专线", "通用 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png'}
   - {name: "新加坡 AI 专线", "type": "fallback", proxies: [SG-TierA, SG-TierB, SG-LX], url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
   - {name: SG-TierA, "type": "fallback", use: [vip2, vip3], filter: "新加坡直连02", url: 'https://generativelanguage.googleapis.com/', expected-status: '404', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png'}
