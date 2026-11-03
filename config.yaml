@@ -2,8 +2,9 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.8f（2026-11-03）===                                    #
+#  === 当前版本：V7.8g（2026-11-03）===                                    #
 #  版本历史：                                                             #
+#   V7.8g (11-03) 通用 AI 专线首选良心云美国；其他地区保留手动选择 #
 #   V7.8f (11-03) 普通池仅按地区/供应商筛选；默认走良心云新加坡     #
 #                  通用 AI 专线仅提供良心云地区，空池拒绝连接        #
 #   V7.3 (10-25) Tailscale 直连全 LAN 化 + DERP 域名直连（另：头部「当前  #
@@ -390,7 +391,7 @@ proxy-groups:
   - {name: US-TierA, "type": "fallback", use: [vip2, vip3], filter: '美国直连[ ]*4', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-TierB, "type": "fallback", use: [vip2, vip3], filter: '美国直连[ ]*1|美国直连Pro 2|美国直连Pro 3', url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
   - {name: US-TierC, "type": "fallback", use: [vip2, vip3], filter: "美国直连3", url: 'https://api.anthropic.com/v1/messages', expected-status: '405', interval: 60, lazy: true, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/US.png'}
-  - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-新加坡, VIP1-美国, VIP1-日本, VIP1-香港, VIP1-台湾, VIP1-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
+  - {name: "通用 AI 专线", "type": "select", proxies: [VIP1-美国, VIP1-新加坡, VIP1-日本, VIP1-香港, VIP1-台湾, VIP1-韩国], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png'}
   - {name: Google, "type": "select", "proxies": ["通用 AI 专线", "美国 AI 专线", "新加坡 AI 专线", 默认代理, 美国, 香港, 日本, 台湾, 新加坡, 韩国, 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google.png'}
   - {name: Apple, "type": "select", "proxies": [默认代理, "美国 AI 专线", 全球手动, DIRECT], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png'}
   - {name: Bilibili, "type": "select", "proxies": [DIRECT, 默认代理, 全球手动], icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png'}
