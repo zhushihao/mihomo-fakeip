@@ -343,7 +343,7 @@ proxy-providers:
     health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: true}
   # 良心云 —— VIP1，主用优先
   vip1:
-    url: https://liangxin.xyz/api/v1/liangxin?OwO=4fdf5bcdf08aa3f2fcb28c914b4ef8bc #修改你的机场1订阅地址（记得前后隔个空格）
+    url: https://7777699.xyz/api/v1/owo?OwO=d4d968d10e3e54173a26a608b24b8732 #修改你的机场1订阅地址（记得前后隔个空格）
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
