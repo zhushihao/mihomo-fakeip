@@ -334,7 +334,7 @@ proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
   vip3:
-    url: https://oc0y.lpynet.com/link/0890eb5f1f67f57ab87c6993660a019a
+    url: https://local-subscription.invalid/vip3
     type: http
     path: ./yaml_bak/AP_MyConfig/cd1eb7b1ee5d55eef27d6d195f82c273
     interval: 86400
@@ -343,7 +343,7 @@ proxy-providers:
     health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 60, lazy: true}
   # 良心云 —— VIP1，主用优先
   vip1:
-    url: https://7777699.xyz/api/v1/owo?OwO=d4d968d10e3e54173a26a608b24b8732 #修改你的机场1订阅地址（记得前后隔个空格）
+    url: https://local-subscription.invalid/vip1 #修改你的机场1订阅地址（记得前后隔个空格）
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
@@ -355,7 +355,7 @@ proxy-providers:
     path: ./yaml_bak/AP_MyConfig/f84e8e038896c269ed957370af743d8c
   # 蓝胖云 —— VIP2，兜底备用
   vip2:
-    url: https://awy4.lpylink.com/link/62e7be0f78fcfd72b472cb3697b9c25c #修改你的机场2订阅地址（记得前后隔个空格）
+    url: https://local-subscription.invalid/vip2 #修改你的机场2订阅地址（记得前后隔个空格）
     "type": "http"
     "interval": 86400
     "proxy": "DIRECT"
