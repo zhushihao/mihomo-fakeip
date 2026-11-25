@@ -2,8 +2,11 @@
 #              Fakeip.yaml - CCSwitchMulti 双组自动测速配置               #
 #                                                     -- Mihomo v1.19.28+ #
 #                                                                         #
-#  === 当前版本：V7.11（2026-11-17）===                                   #
+#  === 当前版本：V7.12（2026-11-25）===                                   #
 #  版本历史：
+#   V7.12 (11-25) 新增域名嗅探 sniffer（世豪批准）：TUN/fake-ip 下客户端若拿着被污染的 IP 直连，      #
+#                  内核从 TLS SNI / HTTP Host 还原域名，再按域名规则走对线路（Mac 实测：污染 IP 也能  #
+#                  正确落 ChatGPT 专线）；skip-domain 保留 米家 / Apple / 公司内网(bilibili.co)      #
 #   V7.11 (11-17) 删除 US-TierA/B/C、SG-TierA/B、SG-LX 六个死组(已被动态 AI 池取代,无任何引用);        #
 #                  两条 AI 专线在正典里改 proxies: [DIRECT] 占位, 实际成员由 verge-overlay /     #
 #                  ai-pool --ensure-overlay 运行时注入 ai-qualified-us/sg 动态池                    #
@@ -335,6 +338,29 @@
 #                 (统计/鉴权辅助域名)漏入该链 → App 报「不支持的国家和地区」; Mac 浏览器版请求       #
 #                 全命中 openai 规则不受影响。修复=AI 集合成员表加入「美国 AI 专线」「新加坡 AI      #
 #                 专线」两条优质线(美国在前), 部署后手动选中「美国 AI 专线」(判 US/10分健康)        #
+# ============= - 域名嗅探（V7.12） - ============
+# TUN / fake-ip 模式下，客户端可能拿着被污染的真实 IP 直连；嗅探让内核从 TLS SNI / HTTP Host
+# 还原出域名，再按域名规则分流。skip-domain 里的保持不变（内网 / 米家 / Apple 不参与改写）。
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - Mijia Cloud
+    - dlg.io.mi.com
+    - "+.apple.com"
+    - "+.bilibili.co"
+    - "+.bilibili.local"
+
 proxies:
 # ============= - 加订阅链接位置 - ============
 proxy-providers:
